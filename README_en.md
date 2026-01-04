@@ -7,10 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 [![C99](https://img.shields.io/badge/standard-C99-green.svg)](https://en.wikipedia.org/wiki/C99)
 [![C++](https://img.shields.io/badge/C%2B%2B-compatible-orange.svg)](https://en.cppreference.com/w/)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20STM32-lightgrey.svg)](readme_ch.md)
-[![Version](https://img.shields.io/badge/version-3.2.0-brightgreen.svg)](ezctest.h)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20STM32-lightgrey.svg)](README.md)
+[![Version](https://img.shields.io/badge/version-3.9.0-brightgreen.svg)](ezctest.h)
 
-**English | [简体中文](readme_ch.md)**
+**English | [简体中文](README.md)**
 
 </div>
 
@@ -355,7 +355,7 @@ EZCTest 是**唯一**支持 Visual Studio 完整历史版本的 C 测试框架�
 | Document | Description |
 |----------|-------------|
 | 💾 **[Example Code](demo.c)** | Complete examples |
-| 🌐 **[中文 README](readme_ch.md)** | Chinese version |
+| 🌐 **[中文 README](README.md)** | Chinese version |
 
 ---
 
@@ -413,7 +413,7 @@ TEST(Threading, ConcurrentAccess) {
 EZCTest's design follows these principles:
 
 1. **Extremely Simple** - "Include one header and use" is not a slogan, but a promise
-2. **Zero Surprises** - Intuitive API design, similar to Google Test, zero learning cost
+2. **Zero Learning** - Intuitive API design, similar to Google Test, zero learning cost
 3. **Resource Safety First** - Innovative four-layer protection, making resource leaks history
 4. **Backward Compatibility** - Support for compilers from 25 years ago, cherishing every legacy codebase
 5. **Battle-Tested** - Proven through 10+ years of production environments, trustworthy

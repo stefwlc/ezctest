@@ -7,10 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 [![C99](https://img.shields.io/badge/standard-C99-green.svg)](https://en.wikipedia.org/wiki/C99)
 [![C++](https://img.shields.io/badge/C%2B%2B-compatible-orange.svg)](https://en.cppreference.com/w/)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20STM32-lightgrey.svg)](readme_ch.md)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20STM32-lightgrey.svg)](README.md)
 [![Version](https://img.shields.io/badge/version-3.9.0-brightgreen.svg)](ezctest.h)
 
-**[English](readme_en.md) | 简体中文**
+**[English](README_en.md) | 简体中文**
 
 </div>
 
@@ -411,7 +411,7 @@ TEST(Threading, ConcurrentAccess) {
 EZCTest 的设计遵循以下原则：
 
 1. **极致简单** - "包含一个头文件就能用"不是口号，而是承诺
-2. **零惊喜** - API 设计直观，类似 Google Test，学习成本为零
+2. **零学习** - API 设计直观，类似 Google Test，学习成本为零
 3. **资源安全第一** - 创新的四层防护，让资源泄漏成为历史
 4. **向后兼容** - 支持 25 年前的编译器，珍惜每一份遗留代码
 5. **实战验证** - 历经 10+ 年生产环境考验，值得信赖
