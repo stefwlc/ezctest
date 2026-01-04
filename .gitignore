@@ -1,0 +1,13 @@
+build/
+main
+main_cpp
+main.exe
+main_cpp.exe
+*.o
+*.obj
+*.log
+*.tmp
+*.bak
+.DS_Store
+.vscode/
+test_defer.txt
