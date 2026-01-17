@@ -2710,6 +2710,51 @@ int ezctest_run_all_tests_w(int argc, wchar_t *wargv[]) {
 #ifdef __cplusplus
 /* C++版本：使用std::stringstream，支持operator<<重载 */
 
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+/**
+ * @brief C++输出辅助：优先以指针形式显示
+ * @note 避免NULL被当作整数输出导致的告警
+ */
+static inline void ezctest_stream_value(std::ostringstream *oss,
+                                        const void *ptr) {
+  (*oss) << ptr;
+}
+
+/**
+ * @brief C++输出辅助：非const指针
+ * @note 统一按指针形式输出
+ */
+template <typename T>
+static inline void ezctest_stream_value(std::ostringstream *oss, T *ptr) {
+  (*oss) << static_cast<const void *>(ptr);
+}
+
+/**
+ * @brief C++输出辅助：const指针
+ * @note 统一按指针形式输出
+ */
+template <typename T>
+static inline void ezctest_stream_value(std::ostringstream *oss,
+                                        const T *ptr) {
+  (*oss) << static_cast<const void *>(ptr);
+}
+
+/**
+ * @brief C++输出辅助：非指针类型
+ */
+template <typename T>
+static inline void ezctest_stream_value(std::ostringstream *oss,
+                                        const T &value) {
+  (*oss) << value;
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief C++版本：格式化两个值的比较结果（支持operator<<重载）
  * @note 任何重载了operator<<的类型都可以自动显示
@@ -2718,7 +2763,10 @@ int ezctest_run_all_tests_w(int argc, wchar_t *wargv[]) {
   do {                                                                         \
     std::ostringstream ezctest_oss;                                            \
     ezctest_oss << "Expected: " << #val1 << " " op " " << #val2                \
-                << "\n  Actual: " << (val1) << " vs " << (val2);               \
+                << "\n  Actual: ";                                             \
+    ezctest_stream_value(&ezctest_oss, (val1));                                \
+    ezctest_oss << " vs ";                                                     \
+    ezctest_stream_value(&ezctest_oss, (val2));                                \
     snprintf(buf, bufsize, "%s", ezctest_oss.str().c_str());                   \
   } while (0)
 
@@ -2749,20 +2797,47 @@ int ezctest_run_all_tests_w(int argc, wchar_t *wargv[]) {
       const char *: "\"%s\"",                                                  \
       void *: "%p",                                                            \
       default: "%p")
+/* C11版本：使用_Generic进行类型安全的格式化 */
 
-/**
- * @brief 类型安全的值转换（用于格式化）
- * @note 将值转换为可以传递给printf的类型
- */
-#define EZCTEST_VALUE_CAST(val)                                                \
-  _Generic((val),                                                              \
-      char: (int)(val),                                                        \
-      signed char: (int)(val),                                                 \
-      unsigned char: (unsigned int)(val),                                      \
-      short: (int)(val),                                                       \
-      unsigned short: (unsigned int)(val),                                     \
-      float: (double)(val),                                                    \
-      default: (val))
+/* 1) 先提供一组“值转换”辅助函数（返回类型要匹配 printf 的格式） */
+static inline int ezctest_vcast_int(int v) { return v; }
+static inline unsigned int ezctest_vcast_uint(unsigned int v) { return v; }
+static inline long ezctest_vcast_long(long v) { return v; }
+static inline unsigned long ezctest_vcast_ulong(unsigned long v) { return v; }
+static inline long long ezctest_vcast_ll(long long v) { return v; }
+static inline unsigned long long ezctest_vcast_ull(unsigned long long v) { return v; }
+
+static inline double ezctest_vcast_float(float v) { return (double)v; }
+static inline double ezctest_vcast_double(double v) { return v; }
+static inline long double ezctest_vcast_ld(long double v) { return v; }
+
+static inline char *ezctest_vcast_cstr(char *s) { return s; }
+static inline const char *ezctest_vcast_ccstr(const char *s) { return s; }
+
+static inline const void *ezctest_vcast_ptr(const void *p) { return p; }
+/* 2) 用_Generic 选择“函数”，再把 val 传给它（避免指针触发 float 分支的非法转换） */
+ #define EZCTEST_VALUE_CAST(val)                                                 \
+ (_Generic((val),                                                              \
+     char: ezctest_vcast_int,                                                  \
+     signed char: ezctest_vcast_int,                                           \
+     unsigned char: ezctest_vcast_uint,                                        \
+     short: ezctest_vcast_int,                                                 \
+     unsigned short: ezctest_vcast_uint,                                       \
+     int: ezctest_vcast_int,                                                   \
+     unsigned int: ezctest_vcast_uint,                                         \
+     long: ezctest_vcast_long,                                                 \
+     unsigned long: ezctest_vcast_ulong,                                       \
+     long long: ezctest_vcast_ll,                                              \
+     unsigned long long: ezctest_vcast_ull,                                    \
+     float: ezctest_vcast_float,                                               \
+     double: ezctest_vcast_double,                                             \
+     long double: ezctest_vcast_ld,                                            \
+     char *: ezctest_vcast_cstr,                                               \
+     const char *: ezctest_vcast_ccstr,                                        \
+     void *: ezctest_vcast_ptr,                                                \
+     const void *: ezctest_vcast_ptr,                                          \
+     default: ezctest_vcast_ptr                                                \
+ )(val))
 
 /**
  * @brief 格式化两个值的比较结果（带实际值显示）

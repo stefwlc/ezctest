@@ -11,6 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if !defined(_WIN32)
+#include <unistd.h>
+#endif
 
 /* 安全函数包装宏，消除 C4996 警告 */
 /* VC8 (VS2005) 及以上版本支持 _s 安全函数 */
@@ -570,6 +573,22 @@ TEST(EdgeCases, EmptyStrings) {
     const char *empty2 = "";
     EXPECT_STREQ(empty1, empty2);
     EXPECT_STRNE(empty1, "not empty");
+}
+
+typedef struct TestStruct{
+    int x;
+    int y;
+}TestStruct;
+
+TEST(Pointer,Empty){
+    TestStruct x = {0, 0};
+    TestStruct *ptr = NULL;
+    TestStruct *ppt = &x;
+    EXPECT_NULL(ptr);
+    EXPECT_EQ(ptr, NULL);
+    EXPECT_NOT_NULL(ppt);
+    EXPECT_NE(ppt, NULL);
+
 }
 
 /* ============================================================================
